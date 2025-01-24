@@ -1,6 +1,6 @@
 /**
  * Notes: 职位模块后台管理-控制器
- * Ver : CCMiniCloud Framework 2.0.1 ALL RIGHTS RESERVED BY cclinux0730 (wechat)
+ * Ver : CCMiniCloud Framework 2.0.1 ALL RIGHTS RESERVED BY wxid_kyh093u96kxb22 (wechat)
  * Date: 2022-06-23 10:20:00 
  */
 

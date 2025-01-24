@@ -1,0 +1,17 @@
+<view class="form-box shadow">
+    <view class="form-group">
+        <view class="title">数据导入</view>
+    </view>
+
+    <view class="form-group">
+        <button bindtap="bindImportTap" class="btn-admin">开始导入</button>
+    </view>
+
+    <view wx:if="{{result}}" class="form-group">
+        <view class="title">导入结果</view>
+        <view>新增职位: {{result.jobs_added}}</view>
+        <view>删除职位: {{result.jobs_deleted}}</view>
+        <view>新增企业: {{result.companies_added}}</view>
+        <view>删除企业: {{result.companies_deleted}}</view>
+    </view>
+</view> 

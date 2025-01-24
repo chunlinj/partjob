@@ -1,6 +1,6 @@
 /**
  * Notes: 管理员管理
- * Ver : CCMiniCloud Framework 2.0.1 ALL RIGHTS RESERVED BY cclinux0730 (wechat)
+ * Ver : CCMiniCloud Framework 2.0.1 ALL RIGHTS RESERVED BY wxid_kyh093u96kxb22 (wechat)
  * Date: 2021-07-11 07:48:00 
  */
 
@@ -57,8 +57,17 @@ class AdminMgrService extends BaseProjectAdminService {
 
 	}
 
+	// 清除日志
 	async clearLog() {
-		this.AppError('[兼职]该功能暂不开放，如有需要请加作者微信：cclinux0730');
+		try {
+			await LogModel.clear();
+			return {
+				cleared: true
+			};
+		} catch (err) {
+			console.error(err);
+			this.AppError('日志清理失败，请重试');
+		}
 	}
 
 	/** 取得日志分页列表 */
@@ -152,27 +161,106 @@ class AdminMgrService extends BaseProjectAdminService {
 		return await AdminModel.getList(where, fields, orderBy, page, size, isTotal, oldTotal);
 	}
 
-	/** 删除管理员 */
+	// 删除管理员
 	async delMgr(id, myAdminId) {
-		this.AppError('[兼职]该功能暂不开放，如有需要请加作者微信：cclinux0730');
+		try {
+			if (!id) this.AppError('管理员ID不能为空');
+			if (id === myAdminId) this.AppError('不能删除自己');
+
+			let admin = await AdminModel.getOne(id);
+			if (!admin) {
+				this.AppError('管理员不存在');
+				return;
+			}
+
+			if (admin.ADMIN_TYPE == 1) {
+				this.AppError('不能删除超级管理员');
+				return;
+			}
+
+			await AdminModel.del(id);
+
+			return {
+				id
+			};
+
+		} catch (err) {
+			console.error(err);
+			this.AppError('删除失败，请重试');
+		}
 	}
 
-	/** 添加新的管理员 */
+	// 添加管理员
 	async insertMgr({
 		name,
 		desc,
 		phone,
 		password
 	}) {
-		this.AppError('[兼职]该功能暂不开放，如有需要请加作者微信：cclinux0730');
+		try {
+			if (!name) this.AppError('账号不能为空');
+			if (!password) this.AppError('密码不能为空');
 
+			// 判断是否存在
+			let where = {
+				ADMIN_NAME: name
+			}
+			let cnt = await AdminModel.count(where);
+			if (cnt > 0)
+				this.AppError('该账号已存在');
+
+			// 加密
+			let data = {
+				ADMIN_NAME: name,
+				ADMIN_DESC: desc,
+				ADMIN_PHONE: phone,
+				ADMIN_PASSWORD: md5Lib.md5(password),
+				ADMIN_TYPE: 0
+			}
+
+			let id = await AdminModel.insert(data);
+
+			return {
+				id
+			};
+
+		} catch (err) {
+			console.error(err);
+			this.AppError('添加失败，请重试');
+		}
 	}
 
-	/** 修改状态 */
+	// 修改管理员状态
 	async statusMgr(id, status, myAdminId) {
-		this.AppError('[兼职]该功能暂不开放，如有需要请加作者微信：cclinux0730');
-	} 
- 
+		try {
+			if (!id) this.AppError('管理员ID不能为空');
+			if (id === myAdminId) this.AppError('不能修改自己的状态');
+
+			let admin = await AdminModel.getOne(id);
+			if (!admin) {
+				this.AppError('管理员不存在');
+				return;
+			}
+
+			if (admin.ADMIN_TYPE == 1) {
+				this.AppError('不能修改超级管理员状态');
+				return;
+			}
+
+			let data = {
+				ADMIN_STATUS: status
+			}
+			await AdminModel.edit(id, data);
+
+			return {
+				id
+			};
+
+		} catch (err) {
+			console.error(err);
+			this.AppError('修改失败，请重试');
+		}
+	}
 
 	/** 获取管理员信息 */
 	async getMgrDetail(id) {
@@ -187,21 +275,74 @@ class AdminMgrService extends BaseProjectAdminService {
 		return mgr;
 	}
 
-	/** 修改管理员 */
+	// 修改管理员
 	async editMgr(id, {
 		name,
 		desc,
 		phone,
 		password
 	}) {
+		try {
+			if (!id) this.AppError('管理员ID不能为空');
+			if (!name) this.AppError('账号不能为空');
 
-		this.AppError('[兼职]该功能暂不开放，如有需要请加作者微信：cclinux0730');
+			// 判断是否存在
+			let where = {
+				ADMIN_NAME: name,
+				_id: ['<>', id]
+			}
+			let cnt = await AdminModel.count(where);
+			if (cnt > 0)
+				this.AppError('该账号已存在');
+
+			let data = {
+				ADMIN_NAME: name,
+				ADMIN_DESC: desc,
+				ADMIN_PHONE: phone
+			}
+
+			if (password) data.ADMIN_PASSWORD = md5Lib.md5(password);
+
+			await AdminModel.edit(id, data);
+
+			return {
+				id
+			};
+
+		} catch (err) {
+			console.error(err);
+			this.AppError('修改失败，请重试');
+		}
 	}
 
-	/** 修改自身密码 */
+	// 修改自己的密码
 	async pwdtMgr(adminId, oldPassword, password) {
+		try {
+			if (!adminId) this.AppError('管理员ID不能为空');
+			if (!oldPassword) this.AppError('旧密码不能为空');
+			if (!password) this.AppError('新密码不能为空');
 
-		this.AppError('[兼职]该功能暂不开放，如有需要请加作者微信：cclinux0730');
+			let where = {
+				_id: adminId,
+				ADMIN_PASSWORD: md5Lib.md5(oldPassword)
+			}
+			let admin = await AdminModel.getOne(where);
+			if (!admin)
+				this.AppError('旧密码错误');
+
+			let data = {
+				ADMIN_PASSWORD: md5Lib.md5(password)
+			}
+			await AdminModel.edit(adminId, data);
+
+			return {
+				id: adminId
+			};
+
+		} catch (err) {
+			console.error(err);
+			this.AppError('修改失败，请重试');
+		}
 	}
 }
 

@@ -1,6 +1,6 @@
 /**
  * Notes: 预约模块控制器
- * Ver : CCMiniCloud Framework 2.0.1 ALL RIGHTS RESERVED BY cclinux0730 (wechat)
+ * Ver : CCMiniCloud Framework 2.0.1 ALL RIGHTS RESERVED BY wxid_kyh093u96kxb22 (wechat)
  * Date: 2021-12-10 04:00:00 
  */
 

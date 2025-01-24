@@ -1,0 +1,100 @@
+{
+  "timestamp": "2025-01-22 20:51:37",
+  "project_info": {
+    "name": "青团社兼职小程序",
+    "database": "cloud://partjob-1g5flu5ebe7aba48",
+    "tables": {
+      "bx_cate": "企业表",
+      "bx_activity": "职位表"
+    }
+  },
+  "data_structure": {
+    "company": {
+      "CATE_FORMS.cover.val": "[cloud://partjob-1g5flu5ebe7aba48.../image_8055854.png]",
+      "CATE_OBJ.cover": "[http://tmp/V4AOrjEIQZUIa18229f070d8d4c05cf562d5dc193d8f.png]",
+      "CATE_SOURCE": "青团社",
+      "CATE_SOURCE_URL": "企业详情页URL",
+      "required_fields": [
+        "CATE_TITLE",
+        "CATE_ID",
+        "CATE_FORMS",
+        "CATE_OBJ"
+      ],
+      "field_examples": {
+        "CATE_ID": "202501221605123456",
+        "CATE_TITLE": "武汉某某餐饮店",
+        "CATE_CNT": "职位数量，默认1"
+      }
+    },
+    "job": {
+      "ACTIVITY_SOURCE": "青团社",
+      "ACTIVITY_SOURCE_URL": "职位详情页URL",
+      "required_fields": [
+        "ACTIVITY_TITLE",
+        "ACTIVITY_FORMS",
+        "ACTIVITY_OBJ"
+      ],
+      "field_examples": {
+        "ACTIVITY_TITLE": "招聘服务员",
+        "ACTIVITY_MAX_CNT": "最大招聘人数，默认50",
+        "ACTIVITY_JOIN_CNT": "已申请人数，默认0"
+      }
+    }
+  },
+  "key_points": [
+    "CATE_FORMS.val 和 CATE_OBJ.cover 的值格式必须不同",
+    "企业名称查重时需要完全匹配",
+    "SSL验证已禁用，生产环境需要处理证书问题"
+  ],
+  "completed_tasks": [
+    "完成企业数据爬取",
+    "完成职位数据爬取",
+    "添加企业和职位的来源字段",
+    "修复cover字段格式"
+  ],
+  "pending_tasks": [
+    "实现数据导入功能",
+    "处理重复数据",
+    "处理SSL证书问题"
+  ],
+  "code_changes": [
+    {
+      "file": "spider_qtshe.py",
+      "changes": [
+        "修改企业cover字段格式",
+        "添加企业source字段",
+        "添加职位source字段",
+        "禁用SSL验证"
+      ],
+      "important_functions": [
+        "parse_company(): 解析企业数据",
+        "parse_job(): 解析职位数据",
+        "parse_money(): 处理薪资格式"
+      ]
+    }
+  ],
+  "test_cases": {
+    "company": "https://m.qtshe.com/company/4543173.html",
+    "job": "https://m.qtshe.com/job/2750022.html"
+  },
+  "import_info": {
+    "method": "通过微信开发者工具云开发控制台导入",
+    "steps": [
+      "打开微信开发者工具",
+      "进入云开发控制台",
+      "选择数据库",
+      "选择对应集合",
+      "点击导入按钮",
+      "选择JSON文件"
+    ],
+    "files": {
+      "companies.json": "企业数据文件",
+      "jobs.json": "职位数据文件"
+    }
+  },
+  "spider_usage": {
+    "test_company": "python tools/test_company.py",
+    "test_job": "python tools/test_job.py",
+    "full_crawl": "python tools/spider_qtshe.py"
+  }
+}

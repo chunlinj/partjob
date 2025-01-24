@@ -1,6 +1,6 @@
 /**
  * Notes: 资讯后台管理
- * Ver : CCMiniCloud Framework 2.0.1 ALL RIGHTS RESERVED BY cclinux0730 (wechat)
+ * Ver : CCMiniCloud Framework 2.0.1 ALL RIGHTS RESERVED BY wxid_kyh093u96kxb22 (wechat)
  * Date: 2021-07-11 07:48:00 
  */
 
@@ -23,16 +23,48 @@ class AdminNewsService extends BaseProjectAdminService {
 		desc = '',
 		forms
 	}) {
+		try {
+			let data = {
+				NEWS_TITLE: title,
+				NEWS_CATE_ID: cateId,
+				NEWS_CATE_NAME: cateName,
+				NEWS_ORDER: order,
+				NEWS_DESC: desc,
+				NEWS_FORMS: forms,
+				NEWS_OBJ: dataUtil.dbForms2Obj(forms)
+			}
 
+			let id = await NewsModel.insert(data);
 
-		this.AppError('[兼职]该功能暂不开放，如有需要请加作者微信：cclinux0730');
+			return {
+				id
+			};
+
+		} catch (err) {
+			console.error(err);
+			this.AppError('添加失败，请重试');
+		}
 	}
 
 	/**删除资讯数据 */
 	async delNews(id) {
-		this.AppError('[兼职]该功能暂不开放，如有需要请加作者微信：cclinux0730');
+		try {
+			let news = await NewsModel.getOne(id);
+			if (!news) {
+				this.AppError('资讯不存在');
+				return;
+			}
 
+			await NewsModel.del(id);
 
+			return {
+				id
+			};
+
+		} catch (err) {
+			console.error(err);
+			this.AppError('删除失败，请重试');
+		}
 	}
 
 	/**获取资讯信息 */
@@ -53,8 +85,23 @@ class AdminNewsService extends BaseProjectAdminService {
 		id,
 		hasImageForms
 	}) {
-		this.AppError('[兼职]该功能暂不开放，如有需要请加作者微信：cclinux0730');
+		try {
+			let news = await NewsModel.getOne(id);
+			if (!news) {
+				this.AppError('资讯不存在');
+				return;
+			}
 
+			await NewsModel.editForms(id, 'NEWS_FORMS', 'NEWS_OBJ', hasImageForms);
+
+			return {
+				id
+			};
+
+		} catch (err) {
+			console.error(err);
+			this.AppError('更新失败，请重试');
+		}
 	}
 
 
@@ -66,9 +113,26 @@ class AdminNewsService extends BaseProjectAdminService {
 		id,
 		content // 富文本数组
 	}) {
+		try {
+			let news = await NewsModel.getOne(id);
+			if (!news) {
+				this.AppError('资讯不存在');
+				return;
+			}
 
-		this.AppError('[兼职]该功能暂不开放，如有需要请加作者微信：cclinux0730');
+			let data = {
+				NEWS_CONTENT: content
+			}
+			await NewsModel.edit(id, data);
 
+			return {
+				id
+			};
+
+		} catch (err) {
+			console.error(err);
+			this.AppError('更新失败，请重试');
+		}
 	}
 
 	/**
@@ -79,9 +143,26 @@ class AdminNewsService extends BaseProjectAdminService {
 		id,
 		imgList // 图片数组
 	}) {
+		try {
+			let news = await NewsModel.getOne(id);
+			if (!news) {
+				this.AppError('资讯不存在');
+				return;
+			}
 
-		this.AppError('[兼职]该功能暂不开放，如有需要请加作者微信：cclinux0730');
+			let data = {
+				NEWS_PIC: imgList
+			}
+			await NewsModel.edit(id, data);
 
+			return {
+				urls: imgList
+			};
+
+		} catch (err) {
+			console.error(err);
+			this.AppError('更新失败，请重试');
+		}
 	}
 
 
@@ -95,9 +176,33 @@ class AdminNewsService extends BaseProjectAdminService {
 		desc = '',
 		forms
 	}) {
+		try {
+			let news = await NewsModel.getOne(id);
+			if (!news) {
+				this.AppError('资讯不存在');
+				return;
+			}
 
-		this.AppError('[兼职]该功能暂不开放，如有需要请加作者微信：cclinux0730');
+			let data = {
+				NEWS_TITLE: title,
+				NEWS_CATE_ID: cateId,
+				NEWS_CATE_NAME: cateName,
+				NEWS_ORDER: order,
+				NEWS_DESC: desc,
+				NEWS_FORMS: forms,
+				NEWS_OBJ: dataUtil.dbForms2Obj(forms)
+			}
 
+			await NewsModel.edit(id, data);
+
+			return {
+				id
+			};
+
+		} catch (err) {
+			console.error(err);
+			this.AppError('编辑失败，请重试');
+		}
 	}
 
 	/**取得资讯分页列表 */
@@ -157,12 +262,50 @@ class AdminNewsService extends BaseProjectAdminService {
 
 	/**修改资讯状态 */
 	async statusNews(id, status) {
-		this.AppError('[兼职]该功能暂不开放，如有需要请加作者微信：cclinux0730');
+		try {
+			let news = await NewsModel.getOne(id);
+			if (!news) {
+				this.AppError('资讯不存在');
+				return;
+			}
+
+			let data = {
+				NEWS_STATUS: status
+			}
+			await NewsModel.edit(id, data);
+
+			return {
+				id
+			};
+
+		} catch (err) {
+			console.error(err);
+			this.AppError('修改失败，请重试');
+		}
 	}
 
 	/**置顶与排序设定 */
 	async sortNews(id, sort) {
-		this.AppError('[兼职]该功能暂不开放，如有需要请加作者微信：cclinux0730');
+		try {
+			let news = await NewsModel.getOne(id);
+			if (!news) {
+				this.AppError('资讯不存在');
+				return;
+			}
+
+			let data = {
+				NEWS_ORDER: sort
+			}
+			await NewsModel.edit(id, data);
+
+			return {
+				id
+			};
+
+		} catch (err) {
+			console.error(err);
+			this.AppError('排序失败，请重试');
+		}
 	}
 }
 

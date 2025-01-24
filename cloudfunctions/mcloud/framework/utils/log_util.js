@@ -1,6 +1,6 @@
  /**
   * Notes: 日志操作函数
-  * Ver : CCMiniCloud Framework 2.34.1 ALL RIGHTS RESERVED BY cclinux0730 (wechat)
+  * Ver : CCMiniCloud Framework 2.34.1 ALL RIGHTS RESERVED BY wxid_kyh093u96kxb22 (wechat)
   * Date: 2021-06-12 04:00:00 
   */
  const timeUtil = require('./time_util.js');

@@ -1,6 +1,6 @@
 /**
  * Notes: 云函数业务主逻辑
- * Ver : CCMiniCloud Framework 2.8.1 ALL RIGHTS RESERVED BY cclinUX0730 (wechat)
+ * Ver : CCMiniCloud Framework 2.8.1 ALL RIGHTS RESERVED BY wxid_kyh093u96kxb22 (wechat)
  * Date: 2020-09-05 04:00:00 
  */
 const util = require('../utils/util.js');
@@ -48,9 +48,12 @@ async function app(event, context) {
 			return appUtil.handlerSvrErr();
 		}
 		global.PID = PID;
-
+        
 		// 路由不存在
-		routes = require('project/' + PID + '/public/route.js');
+        routes = require('project/' + PID + '/public/route.js');
+        console.log('Loading routes from:', 'project/' + PID + '/public/route.js');
+routes = require('project/' + PID + '/public/route.js');
+console.log('Loaded Routes:', routes);
 		if (!util.isDefined(routes[r])) {
 			showEvent(event);
 			console.error('Route [' + r + '] Is Not Exist');
@@ -164,7 +167,7 @@ async function app(event, context) {
 function beforeApp(method) {
 	switch (method) {
 		case 'demo': {
-			return appUtil.handlerAppErr('本系统仅为用户体验演示，后台提交的操作均不生效！如有需要请联系作者微信cclinux0730', appCode.LOGIC);
+			return appUtil.handlerAppErr('本系统仅为用户体验演示，后台提交的操作均不生效！如有需要请联系作者微信wxid_kyh093u96kxb22', appCode.LOGIC);
 		}
 	}
 	console.error('事前处理, Method Not Find = ' + method);

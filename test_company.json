@@ -1,0 +1,41 @@
+{
+  "_pid": "jobpart",
+  "CATE_ID": "202501231916017175",
+  "CATE_TITLE": "松滋市鱿鱼先生餐饮店",
+  "CATE_ORDER": 9999,
+  "CATE_STATUS": 1,
+  "CATE_CNT": 1,
+  "CATE_VOUCH": 0,
+  "CATE_QR": "",
+  "CATE_SOURCE": "青团社",
+  "CATE_SOURCE_URL": "https://m.qtshe.com/company/4543173.html",
+  "CATE_ADD_TIME": 1737630961,
+  "CATE_EDIT_TIME": 1737630961,
+  "CATE_ADD_IP": "",
+  "CATE_EDIT_IP": "",
+  "CATE_FORMS": [
+    {
+      "mark": "cover",
+      "title": "封面图",
+      "type": "image",
+      "val": [
+        "cloud://partjob-1g5flu5ebe7aba48.7061-partjob-1g5flu5ebe7aba48-1336740853/jobpart/cate/b834edac678e4433018864286c7ca0ca/image_8055854.png"
+      ]
+    }
+  ],
+  "CATE_OBJ": {
+    "content": [
+      {
+        "type": "text",
+        "val": "企业类型：个体工商户\n经营状态：存续\n成立时间：2022年11月28日\n注册地址：湖北省荆州市松滋市新江口街道玉岭集贸市场148-13（自主申报）\n统一信用代码：92421087MAC37KRU1J\n组织机构代码：MAC37KRU-1\n经营范围：许可项目：餐饮服务；食品销售；食品互联网销售（依法须经批准的项目，经相关部门批准后方可开展经营活动，具体经营项目以相关部门批准文件或许可证件为准）一般项目：外卖递送服务；食品销售（仅销售预包装食品）；保健食品（预包装）销售（除依法须经批准的项目外，凭营业执照依法自主开展经营活动）\n展开"
+      }
+    ],
+    "cover": [
+      "http://tmp/V4AOrjEIQZUIa18229f070d8d4c05cf562d5dc193d8f.png"
+    ],
+    "size": "小型",
+    "star": "4星推荐",
+    "trade": "餐饮",
+    "type": "个体户"
+  }
+}

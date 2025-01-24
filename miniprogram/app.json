@@ -50,7 +50,7 @@
 		"backgroundColor": "#f1f1f1",
 		"backgroundTextStyle": "dark",
 		"navigationBarBackgroundColor": "#FFDD52",
-		"navigationBarTitleText": "兼职招聘小程序",
+		"navigationBarTitleText": "徕兼职招聘小程序",
 		"navigationBarTextStyle": "black"
 	},
 	"tabBar": {

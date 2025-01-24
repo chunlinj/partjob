@@ -1,6 +1,6 @@
 /**
  * Notes: 职位模块业务逻辑
- * Ver : CCMiniCloud Framework 2.0.1 ALL RIGHTS RESERVED BY cclinux0730 (wechat)
+ * Ver : CCMiniCloud Framework 2.0.1 ALL RIGHTS RESERVED BY wxid_kyh093u96kxb22 (wechat)
  * Date: 2022-06-23 07:48:00 
  */
 
@@ -227,10 +227,94 @@ class ActivityService extends BaseProjectService {
 	}
 
 	//################## 申请
-	// 申请
+	// 申请职位
 	async activityJoin(userId, activityId, forms) {
-		this.AppError('[兼职]该功能暂不开放，如有需要请加作者微信：cclinux0730');
+		try {
+			// 数据校验
+			if (!userId) this.AppError('用户ID不能为空');
+			if (!activityId) this.AppError('职位ID不能为空');
+			if (!Array.isArray(forms)) this.AppError('表单数据必须为数组');
 
+			// 查询用户是否存在
+			let user = await UserModel.getOne({ USER_MINI_OPENID: userId });
+			if (!user) {
+				this.AppError('用户不存在');
+				return;
+			}
+
+			// 查询职位是否存在
+			let activity = await ActivityModel.getOne(activityId);
+			if (!activity) {
+				this.AppError('职位不存在');
+				return;
+			}
+
+			if (activity.ACTIVITY_STATUS == 0) this.AppError('该职位已停止招聘');
+
+			// 查询是否已经申请过
+			let where = {
+				ACTIVITY_JOIN_USER_ID: userId,
+				ACTIVITY_JOIN_ACTIVITY_ID: activityId
+			}
+			let cnt = await ActivityJoinModel.count(where);
+			if (cnt > 0) {
+				this.AppError('您已经申请过此职位');
+				return;
+			}
+
+			// 检查申请人数是否已满
+			if (activity.ACTIVITY_MAX_CNT > 0) {
+				let whereCnt = {
+					ACTIVITY_JOIN_ACTIVITY_ID: activityId,
+					ACTIVITY_JOIN_STATUS: ActivityJoinModel.STATUS.SUCC
+				}
+				let joinCnt = await ActivityJoinModel.count(whereCnt);
+				if (joinCnt >= activity.ACTIVITY_MAX_CNT) {
+					this.AppError('该职位申请人数已满');
+					return;
+				}
+			}
+
+			// 检查申请时间
+			let now = this._timestamp;
+			if (now < activity.ACTIVITY_START || now > activity.ACTIVITY_END) {
+				this.AppError('该职位不在申请时间范围内');
+				return;
+			}
+             // 根据职位审核设置决定申请状态
+        let joinStatus = activity.ACTIVITY_CHECK_SET == 0 ? 
+        ActivityJoinModel.STATUS.SUCC :  // 无需审核，直接通过
+        ActivityJoinModel.STATUS.WAIT;   // 需要审核，设为待审核
+			// 入库
+			let data = {
+				ACTIVITY_JOIN_USER_ID: userId,
+				ACTIVITY_JOIN_ACTIVITY_ID: activityId,
+				ACTIVITY_JOIN_ACTIVITY_TITLE: activity.ACTIVITY_TITLE,
+				ACTIVITY_JOIN_ACTIVITY_CATE_NAME: activity.ACTIVITY_CATE_NAME,
+				ACTIVITY_JOIN_STATUS: joinStatus,
+				ACTIVITY_JOIN_FORMS: forms,
+				ACTIVITY_JOIN_OBJ: dataUtil.dbForms2Obj(forms)
+			}
+
+			let joinId = await ActivityJoinModel.insert(data);
+
+			// 统计
+			await this.statActivityJoin(activityId);
+
+			return {
+				joinId
+			};
+
+		} catch (err) {
+			if (err.name == 'AppError') {
+                // 业务错误直接抛出，保留具体错误信息
+                throw err;
+            } else {
+                // 系统错误记录日志，返回友好提示
+                console.error(err);
+                this.AppError('申请失败，系统异常，请稍后重试');
+            }
+		}
 	}
 
 

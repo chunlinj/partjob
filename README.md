@@ -68,3 +68,9 @@
 ![输入图片说明](demo/89%E5%90%8E%E5%8F%B0-%E5%AF%BC%E5%87%BA.png)
 
 ![输入图片说明](demo/90%E5%90%8E%E5%8F%B0-%E7%AE%A1%E7%90%86%E5%91%98.png)
+
+初始化函數調用：
+{
+  "route": "home/setup_get",
+  "PID":"jobpart"
+}

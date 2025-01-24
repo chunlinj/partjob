@@ -1,6 +1,6 @@
 /**
  * Notes: 职位后台管理
- * Ver : CCMiniCloud Framework 2.0.1 ALL RIGHTS RESERVED BY cclinux0730 (wechat)
+ * Ver : CCMiniCloud Framework 2.0.1 ALL RIGHTS RESERVED BY wxid_kyh093u96kxb22 (wechat)
  * Date: 2022-06-23 07:48:00 
  */
 
@@ -103,7 +103,34 @@ class AdminActivityService extends BaseProjectAdminService {
 
 	/**置顶与排序设定 */
 	async sortActivity(id, sort) {
-		this.AppError('[兼职]该功能暂不开放，如有需要请加作者微信：cclinux0730');
+		try {
+			// 数据校验
+			if (!id) this.AppError('职位ID不能为空');
+			if (sort < 0) this.AppError('排序号不能小于0');
+
+			// 获取职位信息
+			let activity = await ActivityModel.getOne(id);
+			if (!activity) {
+				this.AppError('职位不存在');
+				return;
+			}
+
+			// 更新数据
+			let data = {
+				ACTIVITY_ORDER: sort,
+				ACTIVITY_EDIT_TIME: Math.floor(new Date().getTime() / 1000)
+			}
+
+			await ActivityModel.edit(id, data);
+
+			return {
+				id
+			};
+
+		} catch (err) {
+			console.error(err);
+			this.AppError('排序操作失败，请重试');
+		}
 	}
 
 	/**获取信息 */
@@ -123,7 +150,34 @@ class AdminActivityService extends BaseProjectAdminService {
 
 	/**首页设定 */
 	async vouchActivity(id, vouch) {
-		this.AppError('[兼职]该功能暂不开放，如有需要请加作者微信：cclinux0730');
+		try {
+			// 数据校验
+			if (!id) this.AppError('职位ID不能为空');
+			if (vouch !== 0 && vouch !== 1) this.AppError('推荐状态值错误');
+
+			// 获取职位信息
+			let activity = await ActivityModel.getOne(id);
+			if (!activity) {
+				this.AppError('职位不存在');
+				return;
+			}
+
+			// 更新数据
+			let data = {
+				ACTIVITY_VOUCH: vouch,
+				ACTIVITY_EDIT_TIME: Math.floor(new Date().getTime() / 1000)
+			}
+
+			await ActivityModel.edit(id, data);
+
+			return {
+				id
+			};
+
+		} catch (err) {
+			console.error(err);
+			this.AppError('首页推荐设置失败，请重试');
+		}
 	}
 
 	/**添加 */
@@ -146,23 +200,116 @@ class AdminActivityService extends BaseProjectAdminService {
 		forms,
 		joinForms,
 	}) {
+		try {
+			// 数据校验
+			if (!title) this.AppError('职位名称不能为空');
+			if (!address) this.AppError('工作地点不能为空');
 
+			// 处理表单数据
+			let activityObj = {};
+			if (forms && forms.length > 0) {
+				forms.forEach(form => {
+					activityObj[form.mark] = form.val;
+				});
+			}
 
-		this.AppError('[兼职]该功能暂不开放，如有需要请加作者微信：cclinux0730');
+			// 转换时间
+			let timestamp = Math.floor(new Date().getTime() / 1000);
+			start = timeUtil.time2Timestamp(start);
+			end = timeUtil.time2Timestamp(end);
+
+			// 准备数据
+			let data = {
+				ACTIVITY_TITLE: title,
+				ACTIVITY_CATE_ID: cateId,
+				ACTIVITY_CATE_NAME: cateName,
+				ACTIVITY_MAX_CNT: maxCnt,
+				ACTIVITY_START: start,
+				ACTIVITY_END: end,
+				ACTIVITY_ADDRESS: address,
+				ACTIVITY_ADDRESS_GEO: addressGeo,
+				ACTIVITY_CANCEL_SET: cancelSet,
+				ACTIVITY_CHECK_SET: checkSet,
+				ACTIVITY_ORDER: order || 9999,
+				ACTIVITY_STATUS: 1,
+				ACTIVITY_FORMS: forms || [],
+				ACTIVITY_JOIN_FORMS: joinForms || [],
+				ACTIVITY_OBJ: activityObj,
+				ACTIVITY_ADD_TIME: timestamp,
+				ACTIVITY_EDIT_TIME: timestamp,
+			}
+
+			// 插入数据
+			let id = await ActivityModel.insert(data);
+
+			return {
+				id
+			};
+
+		} catch (err) {
+			console.error(err);
+			this.AppError('添加失败，请重试');
+		}
 	}
 
 	//#############################   
 	/** 清空 */
 	async clearActivityAll(activityId) {
-		this.AppError('[兼职]该功能暂不开放，如有需要请加作者微信：cclinux0730');
+		try {
+			// 数据校验
+			if (!activityId) this.AppError('职位ID不能为空');
 
+			// 获取职位信息
+			let activity = await ActivityModel.getOne(activityId);
+			if (!activity) {
+				this.AppError('职位不存在');
+				return;
+			}
+
+			// 删除该职位下的所有申请记录
+			await ActivityJoinModel.del({ ACTIVITY_JOIN_ACTIVITY_ID: activityId });
+
+			// 更新职位的申请数量
+			await ActivityModel.edit(activityId, { ACTIVITY_JOIN_CNT: 0 });
+
+			return {
+				id: activityId
+			};
+
+		} catch (err) {
+			console.error(err);
+			this.AppError('清空失败，请重试');
+		}
 	}
 
 
 	/**删除数据 */
 	async delActivity(id) {
-		this.AppError('[兼职]该功能暂不开放，如有需要请加作者微信：cclinux0730');
+		try {
+			// 数据校验
+			if (!id) this.AppError('职位ID不能为空');
 
+			// 获取职位信息
+			let activity = await ActivityModel.getOne(id);
+			if (!activity) {
+				this.AppError('职位不存在');
+				return;
+			}
+
+			// 删除职位记录
+			await ActivityModel.del(id);
+
+			// 删除该职位下的所有申请记录
+			await ActivityJoinModel.del({ ACTIVITY_JOIN_ACTIVITY_ID: id });
+
+			return {
+				id
+			};
+
+		} catch (err) {
+			console.error(err);
+			this.AppError('删除失败，请重试');
+		}
 	}
 
 	// 更新forms信息
@@ -170,37 +317,150 @@ class AdminActivityService extends BaseProjectAdminService {
 		id,
 		hasImageForms
 	}) {
-		this.AppError('[兼职]该功能暂不开放，如有需要请加作者微信：cclinux0730');
+		try {
+			// 数据校验
+			if (!id) this.AppError('职位ID不能为空');
 
+			// 获取职位信息
+			let activity = await ActivityModel.getOne(id);
+			if (!activity) {
+				this.AppError('职位不存在');
+				return;
+			}
+
+			// 获取原有表单数据
+			let forms = activity.ACTIVITY_FORMS;
+			if (!forms) forms = [];
+
+			// 更新图片表单
+			for (let i = 0; i < forms.length; i++) {
+				for (let j = 0; j < hasImageForms.length; j++) {
+					if (forms[i].mark == hasImageForms[j].mark) {
+						forms[i].val = hasImageForms[j].val;
+						break;
+					}
+				}
+			}
+
+			// 更新数据
+			let data = {
+				ACTIVITY_FORMS: forms,
+				ACTIVITY_EDIT_TIME: Math.floor(new Date().getTime() / 1000)
+			}
+
+			await ActivityModel.edit(id, data);
+
+			return {
+				id
+			};
+
+		} catch (err) {
+			console.error(err);
+			this.AppError('更新失败，请重试');
+		}
 	}
 
 	/**更新数据 */
-	async editActivity({
-		id,
+	async editActivity({id, 
 		title,
-		cateId, // 二级分类 
+		cateId,
 		cateName,
-
 		maxCnt,
 		start,
 		end,
-
 		address,
 		addressGeo,
-
-		cancelSet,
 		checkSet,
-
+		cancelSet,
 		order,
-		forms,
-		joinForms
+		forms
 	}) {
-		this.AppError('[兼职]该功能暂不开放，如有需要请加作者微信：cclinux0730');
+		try {
+			// 数据校验 
+			if (!id) this.AppError('职位ID不能为空');
+			if (!title) this.AppError('职位标题不能为空');
+			if (!cateId) this.AppError('企业不能为空');
+
+			// 查询职位是否存在
+			let activity = await ActivityModel.getOne(id);
+			if (!activity) {
+				this.AppError('职位不存在');
+				return;
+			}
+
+			// 生成开始时间和结束时间
+			let startTime = timeUtil.time2Timestamp(start);
+			let endTime = timeUtil.time2Timestamp(end);
+			if (startTime > endTime) this.AppError('开始时间不能大于结束时间');
+
+			// 更新数据
+			let data = {
+				ACTIVITY_TITLE: title,
+				ACTIVITY_CATE_ID: cateId,
+				ACTIVITY_CATE_NAME: cateName,
+				ACTIVITY_MAX_CNT: maxCnt,
+				ACTIVITY_START: startTime,
+				ACTIVITY_END: endTime,
+				ACTIVITY_START_DAY: start,
+				ACTIVITY_END_DAY: end,
+				ACTIVITY_ORDER: order,
+				ACTIVITY_CHECK_SET: checkSet,
+				ACTIVITY_CANCEL_SET: cancelSet,
+				ACTIVITY_ADDRESS: address,
+				ACTIVITY_ADDRESS_GEO: addressGeo,
+				ACTIVITY_FORMS: forms,
+				ACTIVITY_OBJ: dataUtil.dbForms2Obj(forms),
+				ACTIVITY_EDIT_TIME: timeUtil.time()
+			}
+
+			await ActivityModel.edit(id, data);
+
+			// 更新对应企业的职位数量
+			await this.statCateCnt(cateId);
+
+			return {
+				id
+			};
+
+		} catch (err) {
+			console.error(err);
+			this.AppError('编辑失败，请重试');
+		}
 	}
 
 	/**修改状态 */
 	async statusActivity(id, status) {
-		this.AppError('[兼职]该功能暂不开放，如有需要请加作者微信：cclinux0730');
+		try {
+			// 数据校验
+			if (!id) this.AppError('职位ID不能为空');
+			if (status !== 0 && status !== 1) this.AppError('状态值错误');
+
+			// 获取职位信息
+			let activity = await ActivityModel.getOne(id);
+			if (!activity) {
+				this.AppError('职位不存在');
+				return;
+			}
+
+			// 更新数据
+			let data = {
+				ACTIVITY_STATUS: status,
+				ACTIVITY_EDIT_TIME: Math.floor(new Date().getTime() / 1000)
+			}
+
+			await ActivityModel.edit(id, data);
+
+			let statusDesc = (status == 0) ? '停用' : '正常';
+
+			return {
+				id,
+				statusDesc
+			};
+
+		} catch (err) {
+			console.error(err);
+			this.AppError('状态修改失败，请重试');
+		}
 	}
 
 	//#############################
@@ -254,8 +514,34 @@ class AdminActivityService extends BaseProjectAdminService {
 	/**修改申请状态  
 	 */
 	async statusActivityJoin(activityJoinId, status, reason = '') {
-		this.AppError('[兼职]该功能暂不开放，如有需要请加作者微信：cclinux0730');
+		try {
+			// 数据校验
+			if (!activityJoinId) this.AppError('预约记录ID不能为空');
 
+			// 获取申请记录
+			let activityJoin = await ActivityJoinModel.getOne(activityJoinId);
+			if (!activityJoin) {
+				this.AppError('预约记录不存在');
+				return;
+			}
+
+			// 更新数据
+			let data = {
+				ACTIVITY_JOIN_STATUS: status,
+				ACTIVITY_JOIN_REASON: reason,
+				ACTIVITY_JOIN_EDIT_TIME: Math.floor(new Date().getTime() / 1000)
+			}
+
+			await ActivityJoinModel.edit(activityJoinId, data);
+
+			return {
+				id: activityJoinId
+			};
+
+		} catch (err) {
+			console.error(err);
+			this.AppError('状态修改失败，请重试');
+		}
 	}
 
 
@@ -263,8 +549,33 @@ class AdminActivityService extends BaseProjectAdminService {
 
 	/** 删除申请 */
 	async delActivityJoin(activityJoinId) {
-		this.AppError('[兼职]该功能暂不开放，如有需要请加作者微信：cclinux0730');
+		try {
+			// 数据校验
+			if (!activityJoinId) this.AppError('预约记录ID不能为空');
 
+			// 获取申请记录
+			let activityJoin = await ActivityJoinModel.getOne(activityJoinId);
+			if (!activityJoin) {
+				this.AppError('预约记录不存在');
+				return;
+			}
+
+			// 删除申请记录
+			await ActivityJoinModel.del(activityJoinId);
+
+			// 更新对应职位的申请数量
+			let activityId = activityJoin.ACTIVITY_JOIN_ACTIVITY_ID;
+			let cnt = await ActivityJoinModel.count({ ACTIVITY_JOIN_ACTIVITY_ID: activityId });
+			await ActivityModel.edit(activityId, { ACTIVITY_JOIN_CNT: cnt });
+
+			return {
+				id: activityJoinId
+			};
+
+		} catch (err) {
+			console.error(err);
+			this.AppError('删除失败，请重试');
+		}
 	}
 
 
@@ -284,9 +595,54 @@ class AdminActivityService extends BaseProjectAdminService {
 		activityId,
 		status
 	}) {
+		try {
+			// 数据校验
+			if (!activityId) this.AppError('职位ID不能为空');
 
-		this.AppError('[兼职]该功能暂不开放，如有需要请加作者微信：cclinux0730');
+			// 获取职位信息
+			let activity = await ActivityModel.getOne(activityId);
+			if (!activity) {
+				this.AppError('职位不存在');
+				return;
+			}
 
+			// 查询条件
+			let where = {
+				ACTIVITY_JOIN_ACTIVITY_ID: activityId
+			};
+			if (status !== -1) where.ACTIVITY_JOIN_STATUS = status;
+
+			// 查询申请记录
+			let orderBy = {
+				ACTIVITY_JOIN_ADD_TIME: 'desc'
+			};
+			let list = await ActivityJoinModel.getAll(where, 'ACTIVITY_JOIN_FORMS,ACTIVITY_JOIN_STATUS,ACTIVITY_JOIN_ADD_TIME', orderBy);
+
+			// 处理数据
+			let data = [];
+			for (let k = 0; k < list.length; k++) {
+				let forms = list[k].ACTIVITY_JOIN_FORMS;
+				let row = {};
+				for (let j in forms) {
+					row[forms[j].title] = forms[j].val;
+				}
+				row['申请时间'] = timeUtil.timestamp2Time(list[k].ACTIVITY_JOIN_ADD_TIME);
+				row['状态'] = this.getJoinStatusDesc(list[k].ACTIVITY_JOIN_STATUS);
+				data.push(row);
+			}
+
+			// 生成Excel
+			let filename = `${activity.ACTIVITY_TITLE}申请名单.xlsx`;
+			await exportUtil.exportDataExcel(EXPORT_ACTIVITY_JOIN_DATA_KEY, filename, data);
+
+			return {
+				downloadUrl: await exportUtil.getExportDataURL(EXPORT_ACTIVITY_JOIN_DATA_KEY)
+			};
+
+		} catch (err) {
+			console.error(err);
+			this.AppError('导出失败，请重试');
+		}
 	}
 }
 

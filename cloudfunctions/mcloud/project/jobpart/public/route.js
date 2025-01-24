@@ -1,12 +1,12 @@
 /**
  * Notes: 路由配置文件
-  * Ver : CCMiniCloud Framework 2.0.1 ALL RIGHTS RESERVED BY cclinux0730 (wechat)
+  * Ver : CCMiniCloud Framework 2.0.1 ALL RIGHTS RESERVED BY wxid_kyh093u96kxb22 (wechat)
  * User: CC
  * Date: 2020-10-14 07:00:00
  */
 
 module.exports = {
-	'test/test': 'test/test_controller@test',
+	//'test/test': 'test/test_controller@test',
 
 	'home/setup_get': 'home_controller@getSetup',
 
@@ -107,6 +107,8 @@ module.exports = {
 	'admin/cate_status': 'admin/admin_cate_controller@statusCate#demo',
 	'admin/cate_vouch': 'admin/admin_cate_controller@vouchCate#demo',
 	'admin/cate_sort': 'admin/admin_cate_controller@sortCate#demo',
-	'admin/cate_update_forms': 'admin/admin_cate_controller@updateCateForms#demo',
- 
+    'admin/cate_update_forms': 'admin/admin_cate_controller@updateCateForms#demo',
+
+    // 修改同步数据路由配置
+    'admin/sync_data': 'admin/admin_sync_controller@syncData',
 }

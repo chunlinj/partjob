@@ -109,6 +109,20 @@ Page({
 		pageHelper.showConfirm('您确认清除所有首页推荐？', cb)
 	},
 
+	bindSyncTap: async function(e) {
+		try {
+			let options = {
+				title: '同步中'
+			}
+			await cloudHelper.callCloudSumbit('admin/sync_data', {}, options).then(res => {
+				pageHelper.showSuccToast('同步成功');
+				console.log('同步结果:', res);
+			});
+		} catch (err) {
+			console.log(err);
+		}
+	},
+
 	bindExitTap: function (e) {
 
 		let callback = function () {

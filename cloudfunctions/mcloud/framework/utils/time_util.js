@@ -1,6 +1,6 @@
 /**
  * Notes: 时间相关函数
- * Ver : CCMiniCloud Framework 2.36.1 ALL RIGHTS RESERVED BY cclinux0730 (wechat)
+ * Ver : CCMiniCloud Framework 2.36.1 ALL RIGHTS RESERVED BY wxid_kyh093u96kxb22 (wechat)
  * Date: 2020-09-05 04:00:00 
  */
 

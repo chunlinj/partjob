@@ -1,0 +1,87 @@
+{
+  "_pid": "jobpart",
+  "ACTIVITY_TITLE": "招资料录入员",
+  "ACTIVITY_SOURCE": "青团社",
+  "ACTIVITY_SOURCE_URL": "https://m.qtshe.com/job/2750022.html",
+  "ACTIVITY_CATE_NAME": "松滋市鱿鱼先生餐饮店",
+  "ACTIVITY_CATE_ID": "202501231916017175",
+  "ACTIVITY_STATUS": 1,
+  "ACTIVITY_ORDER": 9999,
+  "ACTIVITY_MAX_CNT": 50,
+  "ACTIVITY_START": 1737111525000,
+  "ACTIVITY_END": 1744887525000,
+  "ACTIVITY_CHECK_SET": 0,
+  "ACTIVITY_CANCEL_SET": 1,
+  "ACTIVITY_COMMENT_CNT": 0,
+  "ACTIVITY_FORMS": [
+    {
+      "mark": "type",
+      "title": "类型",
+      "type": "select",
+      "val": "固定兼职"
+    },
+    {
+      "mark": "pay",
+      "title": "结算方式",
+      "type": "select",
+      "val": "日结"
+    },
+    {
+      "mark": "biz",
+      "title": "岗位分类",
+      "type": "select",
+      "val": "其他"
+    },
+    {
+      "mark": "date",
+      "title": "工作日期",
+      "type": "text",
+      "val": "2025-01-17 18:58:45"
+    },
+    {
+      "mark": "time",
+      "title": "工作时间",
+      "type": "text",
+      "val": "不限"
+    },
+    {
+      "mark": "person",
+      "title": "人员要求",
+      "type": "textarea",
+      "val": "学历要求：不限\n工作时间：不限\n工作时段：不限\n工作地点：武汉光谷"
+    },
+    {
+      "mark": "money",
+      "title": "工资待遇",
+      "type": "text",
+      "val": "50/小时"
+    },
+    {
+      "mark": "desc",
+      "title": "详细说明",
+      "type": "textarea",
+      "val": "手机添加客户，并备注好，会用手机的来，一般上午发名单，当天完成就行，5r一单一结。"
+    }
+  ],
+  "ACTIVITY_JOIN_FORMS": [],
+  "ACTIVITY_ADDRESS": "湖北省武汉市江夏区星高路",
+  "ACTIVITY_ADDRESS_GEO": {
+    "name": "湖北省武汉市江夏区星高路",
+    "address": "湖北省武汉市江夏区星高路",
+    "latitude": 30.475371,
+    "longitude": 114.51828
+  },
+  "ACTIVITY_OBJ": {
+    "type": "固定兼职",
+    "pay": "日结",
+    "biz": "其他",
+    "date": "2025-01-17 18:58:45",
+    "time": "不限",
+    "person": "学历要求：不限\n工作时间：不限\n工作时段：不限\n工作地点：武汉光谷",
+    "money": "50/小时",
+    "desc": "手机添加客户，并备注好，会用手机的来，一般上午发名单，当天完成就行，5r一单一结。"
+  },
+  "ACTIVITY_ADD_TIME": 1737630961,
+  "ACTIVITY_EDIT_TIME": 1737630961,
+  "ACTIVITY_JOIN_CNT": 0
+}

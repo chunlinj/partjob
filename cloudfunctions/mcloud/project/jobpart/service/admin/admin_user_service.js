@@ -1,6 +1,6 @@
 /**
  * Notes: 用户管理
- * Ver : CCMiniCloud Framework 2.0.1 ALL RIGHTS RESERVED BY cclinux0730 (wechat)
+ * Ver : CCMiniCloud Framework 2.0.1 ALL RIGHTS RESERVED BY wxid_kyh093u96kxb22 (wechat)
  * Date: 2022-01-22  07:48:00 
  */
 
@@ -86,14 +86,57 @@ class AdminUserService extends BaseProjectAdminService {
 		return result;
 	}
 
+	// 修改用户状态
 	async statusUser(id, status, reason) {
-		this.AppError('[兼职]该功能暂不开放，如有需要请加作者微信：cclinux0730');
+		try {
+			let user = await UserModel.getOne(id);
+			if (!user) {
+				this.AppError('用户不存在');
+				return;
+			}
+
+			let data = {
+				USER_STATUS: status
+			}
+			
+			if (status == UserModel.STATUS.UNCHECK) {
+				if (!reason) this.AppError('请输入审核不通过理由');
+				data.USER_CHECK_REASON = reason;
+			} else {
+				data.USER_CHECK_REASON = '';
+			}
+
+			await UserModel.edit(id, data);
+
+			return {
+				id
+			};
+
+		} catch (err) {
+			console.error(err);
+			this.AppError('修改失败，请重试');
+		}
 	}
 
-	/**删除用户 */
+	// 删除用户
 	async delUser(id) {
-		this.AppError('[兼职]该功能暂不开放，如有需要请加作者微信：cclinux0730');
+		try {
+			let user = await UserModel.getOne(id);
+			if (!user) {
+				this.AppError('用户不存在');
+				return;
+			}
 
+			await UserModel.del(id);
+
+			return {
+				id
+			};
+
+		} catch (err) {
+			console.error(err);
+			this.AppError('删除失败，请重试');
+		}
 	}
 
 	// #####################导出用户数据
@@ -110,9 +153,40 @@ class AdminUserService extends BaseProjectAdminService {
 
 	/**导出用户数据 */
 	async exportUserDataExcel(condition, fields) {
+		try {
+			let where = JSON.parse(decodeURIComponent(condition));
 
-		this.AppError('[兼职]该功能暂不开放，如有需要请加作者微信：cclinux0730');
+			// 取得数据
+			let list = await UserModel.getAll(where, fields);
 
+			// 数据格式化
+			for (let k = 0; k < list.length; k++) {
+				list[k].USER_STATUS_DESC = UserModel.getDesc('STATUS', list[k].USER_STATUS);
+				list[k].USER_ADD_TIME = timeUtil.timestamp2Time(list[k].USER_ADD_TIME);
+				list[k].USER_LOGIN_TIME = list[k].USER_LOGIN_TIME ? timeUtil.timestamp2Time(list[k].USER_LOGIN_TIME) : '未登录';
+
+				// 生成行数据
+				let row = {};
+				for (let key in list[k]) {
+					if (key.includes('USER_') && !key.includes('USER_MINI_OPENID')) {
+						row[key.replace('USER_', '')] = list[k][key];
+					}
+				}
+				list[k] = row;
+			}
+
+			// 生成Excel
+			let filename = '用户数据' + timeUtil.time('YMD') + '.xlsx';
+			await exportUtil.exportDataExcel(EXPORT_USER_DATA_KEY, filename, list);
+
+			return {
+				downloadUrl: await exportUtil.getExportDataURL(EXPORT_USER_DATA_KEY)
+			};
+
+		} catch (err) {
+			console.error(err);
+			this.AppError('导出失败，请重试');
+		}
 	}
 
 }
